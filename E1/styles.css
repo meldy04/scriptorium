@@ -1,0 +1,94 @@
+body {
+    background-color: rgb(206, 206, 206);
+    font-family: "Open Sans", sans-serif;
+}
+
+header {
+    background-color: black;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+header h1 {
+    color: white;
+    font-size: 30px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-align: center;
+}
+
+nav ul li {
+    background-color: rgb(255, 255, 255);
+    padding: 14px 16px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+nav a:link {
+    text-decoration: none;
+    color: black;
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+}
+
+nav a:hover {
+    color: white;
+    background-color: black;
+    border-radius: 5px;
+}
+
+section {
+    padding: 2%;
+    margin: 20px;
+    background-color: rgb(226, 226, 226);
+    border-radius: 5px;  
+}
+
+#about {
+    background-color: rgb(244, 244, 244);
+}
+
+#hobbies {
+    background-color: rgb(191, 191, 191);
+}
+
+#hobbies li {
+    font-style: italic;
+    color: blueviolet;
+    background-color: white;
+    margin-bottom: 2px;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+#contact {
+    background-color: rgb(128, 128, 128);
+}
+
+form {
+    border-radius: 5px;
+}
+
+input[type=text], input[type=email], input[type=submit], textarea {
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid white;
+    border-radius: 4px;
+  }
+
+footer {
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+    font-size: 10px;
+    background-color: black;
+    color: white;
+}
