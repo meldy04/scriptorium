@@ -1,60 +1,35 @@
 export default function handler(req, res) {
-    if(req.method !== 'POST') {
+    if (req.method !== 'POST') {
         return res.setHeader('Allow', ['POST']).status(405).end(`Method ${req.method} not allowed`);
     }
-    const { data } = req.body;
 
-    // Check if data is provided and is an object
-    if (!data || typeof data !== 'object') {
-        return res.status(400).json({ error: "Missing or invalid field: data" });
-    }
+    const { name, age, preferences } = req.body;
 
     // Check required fields are provided
-    if (!data.hasOwnProperty('name')) {
+    if (typeof name !== 'string' || name.trim() === '') {
         return res.status(400).json({ error: "Missing field: name" });
     }
-    if (!data.hasOwnProperty('age')) {
+    if (typeof age !== 'number' || isNaN(age)) {
         return res.status(400).json({ error: "Missing field: age" });
     }
-    if (!data.hasOwnProperty('preferences')) {
+    if (typeof preferences !== 'object' || preferences === null) {
         return res.status(400).json({ error: "Missing field: preferences" });
     }
 
-    const preferences = data.preferences;
-
-    // Check if preferences is an object
-    if (typeof preferences !== 'object' || preferences === null) {
-        return res.status(400).json({ error: "Invalid field: preferences" });
-    }
-
     // Check required fields in preferences
-    if (!preferences.hasOwnProperty('color')) {
+    if (typeof preferences.color !== 'string' || preferences.color.trim() === '') {
         return res.status(400).json({ error: "Missing field: color" });
     }
-    if (!preferences.hasOwnProperty('hobby')) {
+    if (typeof preferences.hobby !== 'string' || preferences.hobby.trim() === '') {
         return res.status(400).json({ error: "Missing field: hobby" });
     }
 
-    const name = data.name;
-    const age = data.age;
-    const color = preferences.color;
-    const hobby = preferences.hobby;
+    const response = {
+        message: `Hello, ${name}!`,
+        ageMessage: `You're ${age} years old.`,
+        preferencesMessage: `Your favorite color is ${preferences.color} and you enjoy ${preferences.hobby}.`,
+        offerMessage: age >= 18 ? "You're eligible for our special offers!" : undefined,
+    };
 
-    // Validate the types
-    if (typeof name !== 'string') {
-        return res.status(400).json({ error: "Invalid field type: name should be a string" });
-    }
-    if (typeof age !== 'number') {
-        return res.status(400).json({ error: "Invalid field type: age should be a number" });
-    }
-
-    const messages = [];
-    messages.push(`Hello, ${name}!`);
-    messages.push(`You're ${age} years old.`);
-    messages.push(`Your favourite colour is ${color} and you enjoy ${hobby}.`);
-
-    if (age >= 18) {
-        messages.push("You're eligible for our special offers!");
-    }
-    return res.json({ messages });
+    return res.status(200).json(response);
 }
