@@ -26,7 +26,6 @@ export default function handler(req, res) {
   
   if (tags) {
     const tagsArray = tags.split(',').map(tag => tag.toLowerCase());
-    console.log("Tags Array:", tagsArray);
 
     filtered = filtered.filter(post => {
       const postTags = post.tags.map(t => t.toLowerCase());
