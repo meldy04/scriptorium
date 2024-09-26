@@ -54,8 +54,13 @@ export default function handler(req, res) {
         return res.status(400).json({ error: "Invalid field type: hobby should be a string" });
     }
 
+    const messages = [];
+    messages.push(`Hello, ${name}!`);
+    messages.push(`You're ${age} years old.`);
+    messages.push(`You enjoy ${hobby}.`);
+
     if (age >= 18) {
-        return res.json({ message: `Hello ${name}, you are ${age} years old! Your favourite colour is ${color} and you enjoy ${hobby}. You're eligible for our special offers!` });
+        messages.push("You're eligible for our special offers!");
     }
-    return res.json({ message: `Hello ${name}, you are ${age} years old! Your favourite colour is ${color} and you enjoy ${hobby}.` });
+    return res.json({ messages });
 }
