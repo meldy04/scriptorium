@@ -1,5 +1,8 @@
 export default function handler(req, res) {
-    const { data } = req.query;
+    if(req.method !== 'POST') {
+        return res.setHeader('Allow', ['POST']).status(405).end(`Method ${req.method} not allowed`);
+    }
+    const { data } = req.body;
 
     // Check if data is provided and is an object
     if (!data || typeof data !== 'object') {
