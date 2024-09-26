@@ -47,17 +47,11 @@ export default function handler(req, res) {
     if (typeof age !== 'number') {
         return res.status(400).json({ error: "Invalid field type: age should be a number" });
     }
-    if (typeof color !== 'string') {
-        return res.status(400).json({ error: "Invalid field type: colour should be a string" });
-    }
-    if (typeof hobby !== 'string') {
-        return res.status(400).json({ error: "Invalid field type: hobby should be a string" });
-    }
 
     const messages = [];
     messages.push(`Hello, ${name}!`);
     messages.push(`You're ${age} years old.`);
-    messages.push(`You enjoy ${hobby}.`);
+    messages.push(`Your favourite colour is ${color} and you enjoy ${hobby}.`);
 
     if (age >= 18) {
         messages.push("You're eligible for our special offers!");
