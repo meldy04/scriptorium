@@ -1,7 +1,16 @@
 import data from './data'
  
 export default function handler(req, res) {
-  const { id, tags } = req.query;
+  const { id, tags, page = 1, limit = 10 } = req.query;
+
+  const paginate = (array, page, limit) => {
+    const pageNo = Number(page);
+    const limitNo = Number(limit);
+    const start = (pageNo - 1) * limitNo;
+    const end = start + limitNo;
+
+    return array.slice(start, end);
+  };
 
   if(id) {
     const postID = Number(id);
@@ -12,19 +21,19 @@ export default function handler(req, res) {
     }
     return res.status(200).json(post);
   }
+
+  let filtered = data;
   
   if (tags) {
     const tagsArray = tags.split(',').map(tag => tag.toLowerCase());
     console.log("Tags Array:", tagsArray);
 
-    const filtered = data.filter(post => {
+    filtered = filtered.filter(post => {
       const postTags = post.tags.map(t => t.toLowerCase());
-
       return tagsArray.every(tag => postTags.includes(tag));
     });
-  
-    return res.status(200).json(filtered);
   }
+  const paginated = paginate(filtered, page, limit);
        
-  return res.status(200).json(data); 
+  return res.status(200).json(paginated); 
 }
