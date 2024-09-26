@@ -25,8 +25,8 @@ export default function handler(req, res) {
     }
 
     // Check required fields in preferences
-    if (!preferences.hasOwnProperty('colour')) {
-        return res.status(400).json({ error: "Missing field: colour" });
+    if (!preferences.hasOwnProperty('color')) {
+        return res.status(400).json({ error: "Missing field: color" });
     }
     if (!preferences.hasOwnProperty('hobby')) {
         return res.status(400).json({ error: "Missing field: hobby" });
@@ -34,7 +34,7 @@ export default function handler(req, res) {
 
     const name = data.name;
     const age = data.age;
-    const colour = preferences.colour;
+    const color = preferences.color;
     const hobby = preferences.hobby;
 
     // Validate the types
@@ -44,7 +44,7 @@ export default function handler(req, res) {
     if (typeof age !== 'number') {
         return res.status(400).json({ error: "Invalid field type: age should be a number" });
     }
-    if (typeof colour !== 'string') {
+    if (typeof color !== 'string') {
         return res.status(400).json({ error: "Invalid field type: colour should be a string" });
     }
     if (typeof hobby !== 'string') {
@@ -52,7 +52,7 @@ export default function handler(req, res) {
     }
 
     if (age >= 18) {
-        return res.json({ message: `Hello ${name}, you are ${age} years old! Your favourite colour is ${colour} and you enjoy ${hobby}. You're eligible for our special offers!` });
+        return res.json({ message: `Hello ${name}, you are ${age} years old! Your favourite colour is ${color} and you enjoy ${hobby}. You're eligible for our special offers!` });
     }
-    return res.json({ message: `Hello ${name}, you are ${age} years old! Your favourite colour is ${colour} and you enjoy ${hobby}.` });
+    return res.json({ message: `Hello ${name}, you are ${age} years old! Your favourite colour is ${color} and you enjoy ${hobby}.` });
 }
