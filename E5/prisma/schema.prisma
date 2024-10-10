@@ -18,7 +18,7 @@ model Author {
   firstName String
   lastName  String
   bio       String?
-  Book Book[]
+  books Book[] @relation("AuthorBooks")
 }
 
 model Book {
@@ -27,6 +27,6 @@ model Book {
   isbn  String  @unique
   publishedDate DateTime
   available Boolean @default(true)
-  author    Author?  @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  Int?
+  author    Author?  @relation("AuthorBooks", fields: [authorId], references: [id], onDelete: Cascade)
 }

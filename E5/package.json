@@ -1,11 +1,16 @@
 {
-  "dependencies": {
-    "@prisma/client": "^5.20.0",
-    "@prisma/studio": "^0.502.0",
-    "prisma": "^5.20.0"
+  "name": "ex5",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "devDependencies": {
-    "jest": "^29.7.0",
-    "supertest": "^7.0.0"
+  "dependencies": {
+    "react": "^18",
+    "react-dom": "^18",
+    "next": "14.2.15"
   }
 }
