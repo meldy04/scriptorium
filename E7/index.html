@@ -18,8 +18,8 @@
         super(props);
         this.state = {
           conversionType: 'Length',
-          fromUnit: 'metres',
-          toUnit: 'feet',
+          fromUnit: 'Meter',
+          toUnit: 'Feet',
           fromValue: 0,
           toValue: 0,
         };
@@ -31,8 +31,8 @@
         let toUnit = '';
 
         if (type === 'Length') {
-          fromUnit = 'metres';
-          toUnit = 'feet';
+          fromUnit = 'Meter';
+          toUnit = 'Feet';
         } else if (type === 'Weight') {
           fromUnit = 'Kilogram';
           toUnit = 'pounds';
@@ -74,7 +74,7 @@
 
       getDifferentUnit = (currentUnit) => {
         const { conversionType } = this.state;
-        const lengthUnits = ['metres', 'feet'];
+        const lengthUnits = ['Meter', 'Feet'];
         const weightUnits = ['Kilograms', 'pounds'];
         const temperatureUnits = ['celsius', 'fahrenheit', 'kelvin'];
         const areaUnits = ['Square Meter', 'Square Feet'];
@@ -107,9 +107,9 @@
         let result = 0;
 
         if (conversionType === 'Length') {
-          if (fromUnit === 'metres' && toUnit === 'feet') {
+          if (fromUnit === 'Meter' && toUnit === 'Feet') {
             result = (fromValue * 3.281).toFixed(2);
-          } else if (fromUnit === 'feet' && toUnit === 'metres') {
+          } else if (fromUnit === 'Feet' && toUnit === 'Meter') {
             result = (fromValue / 3.281).toFixed(2);
           }
         } else if (conversionType === 'Weight') {
@@ -148,9 +148,9 @@
         let result = 0;
 
         if (conversionType === 'Length') {
-          if (toUnit === 'metres' && fromUnit === 'feet') {
+          if (toUnit === 'Meter' && fromUnit === 'Feet') {
             result = (toValue * 3.281).toFixed(2);
-          } else if (toUnit === 'feet' && fromUnit === 'metres') {
+          } else if (toUnit === 'Feet' && fromUnit === 'Meter') {
             result = (toValue / 3.281).toFixed(2);
           }
         } else if (conversionType === 'Weight') {
@@ -183,7 +183,7 @@
       render() {
         const { conversionType, fromUnit, toUnit, fromValue, toValue } = this.state;
 
-        const lengthUnits = ['metres', 'feet'];
+        const lengthUnits = ['Meter', 'Feet'];
         const weightUnits = ['Kilogram', 'pounds'];
         const temperatureUnits = ['celsius', 'fahrenheit', 'kelvin'];
         const areaUnits = ['Square Meter', 'Square Feet'];
