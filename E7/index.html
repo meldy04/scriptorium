@@ -18,8 +18,8 @@
         super(props);
         this.state = {
           conversionType: 'Length',
-          fromUnit: 'Meter',
-          toUnit: 'Feet',
+          fromUnit: 'metres',
+          toUnit: 'feet',
           fromValue: 0,
           toValue: 0,
         };
@@ -31,17 +31,17 @@
         let toUnit = '';
 
         if (type === 'Length') {
-          fromUnit = 'Meter';
-          toUnit = 'Feet';
+          fromUnit = 'metres';
+          toUnit = 'feet';
         } else if (type === 'Weight') {
           fromUnit = 'Kilogram';
-          toUnit = 'pounds';
+          toUnit = 'Pounds';
         } else if (type === 'Temperature') {
           fromUnit = 'celsius';
           toUnit = 'fahrenheit';
         } else if (type === 'Area') {
           fromUnit = 'Square Meter';
-          toUnit = 'Square Meter';
+          toUnit = 'Square Feet';
         }
 
         this.setState({
@@ -74,8 +74,8 @@
 
       getDifferentUnit = (currentUnit) => {
         const { conversionType } = this.state;
-        const lengthUnits = ['Meter', 'Feet'];
-        const weightUnits = ['Kilograms', 'pounds'];
+        const lengthUnits = ['metres', 'feet'];
+        const weightUnits = ['Kilograms', 'Pounds'];
         const temperatureUnits = ['celsius', 'fahrenheit', 'kelvin'];
         const areaUnits = ['Square Meter', 'Square Feet'];
 
@@ -107,16 +107,16 @@
         let result = 0;
 
         if (conversionType === 'Length') {
-          if (fromUnit === 'Meter' && toUnit === 'Feet') {
-            result = (fromValue * 3.281).toFixed(2);
-          } else if (fromUnit === 'Feet' && toUnit === 'Meter') {
-            result = (fromValue / 3.281).toFixed(2);
+          if (fromUnit === 'metres' && toUnit === 'feet') {
+            result = (fromValue * 3.28084).toFixed(2);
+          } else if (fromUnit === 'feet' && toUnit === 'metres') {
+            result = (fromValue / 3.28084).toFixed(2);
           }
         } else if (conversionType === 'Weight') {
-          if (fromUnit === 'kilograms' && toUnit === 'pounds') {
-            result = (fromValue * 2.205).toFixed(2);
-          } else if (fromUnit === 'pounds' && toUnit === 'kilograms') {
-            result = (fromValue / 2.205).toFixed(2);
+          if (fromUnit === 'Kilogram' && toUnit === 'Pounds') {
+            result = (fromValue * 2.20462);
+          } else if (fromUnit === 'Pounds' && toUnit === 'Kilogram') {
+            result = (fromValue / 2.20462);
           }
         } else if (conversionType === 'Temperature') {
           if (fromUnit === 'celsius' && toUnit === 'fahrenheit') {
@@ -134,9 +134,9 @@
           }
         } else if (conversionType === 'Area') {
           if (fromUnit === 'Square Meter' && toUnit === 'Square Feet') {
-            result = (fromValue * 10.764).toFixed(2);
+            result = (fromValue * 10.764);
           } else if (fromUnit === 'Square Feet' && toUnit === 'Square Meter') {
-            result = (fromValue / 10.764).toFixed(2);
+            result = (fromValue / 10.764);
           }
         }
 
@@ -148,15 +148,15 @@
         let result = 0;
 
         if (conversionType === 'Length') {
-          if (toUnit === 'Meter' && fromUnit === 'Feet') {
+          if (toUnit === 'metres' && fromUnit === 'feet') {
             result = (toValue * 3.281).toFixed(2);
-          } else if (toUnit === 'Feet' && fromUnit === 'Meter') {
+          } else if (toUnit === 'feet' && fromUnit === 'metres') {
             result = (toValue / 3.281).toFixed(2);
           }
         } else if (conversionType === 'Weight') {
-          if (toUnit === 'Kilogram' && fromUnit === 'pounds') {
+          if (toUnit === 'Kilogram' && fromUnit === 'Pounds') {
             result = (toValue * 2.205).toFixed(2);
-          } else if (toUnit === 'pounds' && fromUnit === 'Kilogram') {
+          } else if (toUnit === 'Pounds' && fromUnit === 'Kilogram') {
             result = (toValue / 2.205).toFixed(2);
           }
         } else if (conversionType === 'temperature') {
@@ -183,8 +183,8 @@
       render() {
         const { conversionType, fromUnit, toUnit, fromValue, toValue } = this.state;
 
-        const lengthUnits = ['Meter', 'Feet'];
-        const weightUnits = ['Kilogram', 'pounds'];
+        const lengthUnits = ['metres', 'feet'];
+        const weightUnits = ['Kilograms', 'Pounds'];
         const temperatureUnits = ['celsius', 'fahrenheit', 'kelvin'];
         const areaUnits = ['Square Meter', 'Square Feet'];
 
