@@ -48,8 +48,8 @@
           conversionType: type,
           fromUnit,
           toUnit,
-          fromValue: 0,
-          toValue: 0,
+          fromValue: '',
+          toValue: '',
         });
       };
 
@@ -149,9 +149,9 @@
 
         if (conversionType === 'Length') {
           if (toUnit === 'Meter' && fromUnit === 'Feet') {
-            result = (toValue * 3.281).toFixed(2);
+            result = (toValue * 3.28084).toFixed(2);
           } else if (toUnit === 'Feet' && fromUnit === 'Meter') {
-            result = (toValue / 3.281).toFixed(2);
+            result = (toValue / 3.28084).toFixed(2);
           }
         } else if (conversionType === 'Weight') {
           if (toUnit === 'Kilogram' && fromUnit === 'Pounds') {
@@ -202,7 +202,6 @@
         return (
           <div>
             <h2>Unit Converter</h2>
-
             <label>
               <select id="conversion-type" value={conversionType} onChange={this.handleConversionTypeChange}>
                 <option value="Length">Length</option>
