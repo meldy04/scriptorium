@@ -120,13 +120,17 @@
           }
         } else if (conversionType === 'Temperature') {
           if (fromUnit === 'celsius' && toUnit === 'fahrenheit') {
-            result = fromValue * 9 / 5 + 32;
+            result = (fromValue * 9 / 5) + 32;
           } else if (fromUnit === 'fahrenheit' && toUnit === 'celsius') {
             result = (fromValue - 32) * 5 / 9;
           } else if (fromUnit === 'celsius' && toUnit === 'kelvin') {
             result = parseFloat(fromValue) + 273.15;
           } else if (fromUnit === 'kelvin' && toUnit === 'celsius') {
             result = fromValue - 273.15;
+          } else if (fromUnit === 'fahrenheit' && toUnit === 'kelvin') {
+            result = (fromValue - 32) * 5 / 9 + 273.15;
+          } else if (fromUnit === 'kelvin' && toUnit === 'fahrenheit') {
+            result = (fromValue - 273.15) * 9 / 5 + 32 ;
           }
         } else if (conversionType === 'Area') {
           if (fromUnit === 'Square Meter' && toUnit === 'Square Feet') {
