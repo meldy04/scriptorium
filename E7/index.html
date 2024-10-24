@@ -149,9 +149,9 @@
 
         if (conversionType === 'Length') {
           if (toUnit === 'Meter' && fromUnit === 'Feet') {
-            result = (toValue * 3.28084).toFixed(2);
-          } else if (toUnit === 'Feet' && fromUnit === 'Meter') {
             result = (toValue / 3.28084).toFixed(2);
+          } else if (toUnit === 'Feet' && fromUnit === 'Meter') {
+            result = (toValue * 3.28084).toFixed(2);
           }
         } else if (conversionType === 'Weight') {
           if (toUnit === 'Kilogram' && fromUnit === 'Pounds') {
