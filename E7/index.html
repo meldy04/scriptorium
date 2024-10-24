@@ -181,7 +181,7 @@
       };
 
       render() {
-        const { conversionType, fromUnit, toUnit, fromValue, toValue } = this.state;
+        const { conversionType, fromUnit, toUnit } = this.state;
 
         const lengthUnits = ['Meter', 'Feet'];
         const weightUnits = ['Kilogram', 'Pounds'];
@@ -198,6 +198,8 @@
         } else if (conversionType === 'Area') {
           units = areaUnits;
         }
+
+        let filteredUnits = units.filter(unit => unit !== fromUnit);
 
         return (
           <div>
@@ -230,7 +232,7 @@
 
             <label>
               <select id="rhs-unit" value={toUnit} onChange={(e) => this.handleUnitChange(e, false)}>
-                {units.map((unit) => (
+                {filteredUnits.map((unit) => (
                   <option key={unit} value={unit}>
                     {unit}
                   </option>
