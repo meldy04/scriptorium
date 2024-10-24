@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Unit Converter</title>
+</head>
+<body>
+  <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    class Converter extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          conversionType: 'length',
+          fromUnit: 'metres',
+          toUnit: 'feet',
+          fromValue: 0,
+          toValue: 0,
+        };
+      }
+
+      handleConversionTypeChange = (event) => {
+        const type = event.target.value;
+        let fromUnit = '';
+        let toUnit = '';
+
+        if (type === 'length') {
+          fromUnit = 'metres';
+          toUnit = 'feet';
+        } else if (type === 'weight') {
+          fromUnit = 'kilograms';
+          toUnit = 'pounds';
+        } else if (type === 'temperature') {
+          fromUnit = 'celsius';
+          toUnit = 'fahrenheit';
+        } else if (type === 'area') {
+          fromUnit = 'sqm';
+          toUnit = 'sqf';
+        }
+
+        this.setState({
+          conversionType: type,
+          fromUnit,
+          toUnit,
+          fromValue: 0,
+          toValue: 0,
+        });
+      };
+
+      handleUnitChange = (event, isFromUnit) => {
+        const unit = event.target.value;
+        const { fromUnit, toUnit } = this.state;
+
+        if (isFromUnit) {
+          if (unit === toUnit) {
+            this.setState({ fromUnit: unit, toUnit: this.getDifferentUnit(unit) }, this.convertFromValue);
+          } else {
+            this.setState({ fromUnit: unit }, this.convertFromValue);
+          }
+        } else {
+          if (unit === fromUnit) {
+            this.setState({ toUnit: unit, fromUnit: this.getDifferentUnit(unit) }, this.convertToValue);
+          } else {
+            this.setState({ toUnit: unit }, this.convertToValue);
+          }
+        }
+      };
+
+      getDifferentUnit = (currentUnit) => {
+        const { conversionType } = this.state;
+        const lengthUnits = ['metres', 'feet'];
+        const weightUnits = ['kilograms', 'pounds'];
+        const temperatureUnits = ['celsius', 'fahrenheit', 'kelvin'];
+        const areaUnits = ['sqm', 'sqf'];
+
+        let units = [];
+
+        if (conversionType === 'length') {
+          units = lengthUnits;
+        } else if (conversionType === 'weight') {
+          units = weightUnits;
+        } else if (conversionType === 'temperature') {
+          units = temperatureUnits;
+        } else if (conversionType === 'area') {
+          units = areaUnits;
+        }
+
+        return units.find((unit) => unit !== currentUnit);
+      };
+
+      handleFromValueChange = (event) => {
+        this.setState({ fromValue: event.target.value }, this.convertFromValue);
+      };
+
+      handleToValueChange = (event) => {
+        this.setState({ toValue: event.target.value }, this.convertToValue);
+      };
+
+      convertFromValue = () => {
+        const { fromValue, fromUnit, toUnit, conversionType } = this.state;
+        let result = 0;
+
+        if (conversionType === 'length') {
+          if (fromUnit === 'metres' && toUnit === 'feet') {
+            result = fromValue * 3.281;
+          } else if (fromUnit === 'feet' && toUnit === 'metres') {
+            result = fromValue / 3.281;
+          }
+        } else if (conversionType === 'weight') {
+          if (fromUnit === 'kilograms' && toUnit === 'pounds') {
+            result = fromValue * 2.205;
+          } else if (fromUnit === 'pounds' && toUnit === 'kilograms') {
+            result = fromValue / 2.205;
+          }
+        } else if (conversionType === 'temperature') {
+          if (fromUnit === 'celsius' && toUnit === 'fahrenheit') {
+            result = fromValue * 9 / 5 + 32;
+          } else if (fromUnit === 'fahrenheit' && toUnit === 'celsius') {
+            result = (fromValue - 32) * 5 / 9;
+          } else if (fromUnit === 'celsius' && toUnit === 'kelvin') {
+            result = parseFloat(fromValue) + 273.15;
+          } else if (fromUnit === 'kelvin' && toUnit === 'celsius') {
+            result = fromValue - 273.15;
+          }
+        } else if (conversionType === 'area') {
+          if (fromUnit === 'sqm' && toUnit === 'sqf') {
+            result = fromValue * 10.764;
+          } else if (fromUnit === 'sqf' && toUnit === 'sqm') {
+            result = fromValue / 10.764;
+          }
+        }
+
+        this.setState({ toValue: result });
+      };
+
+      convertToValue = () => {
+        const { toValue, fromUnit, toUnit, conversionType } = this.state;
+        let result = 0;
+
+        if (conversionType === 'length') {
+          if (toUnit === 'metres' && fromUnit === 'feet') {
+            result = toValue * 3.281;
+          } else if (toUnit === 'feet' && fromUnit === 'metres') {
+            result = toValue / 3.281;
+          }
+        } else if (conversionType === 'weight') {
+          if (toUnit === 'kilograms' && fromUnit === 'pounds') {
+            result = toValue * 2.205;
+          } else if (toUnit === 'pounds' && fromUnit === 'kilograms') {
+            result = toValue / 2.205;
+          }
+        } else if (conversionType === 'temperature') {
+          if (toUnit === 'celsius' && fromUnit === 'fahrenheit') {
+            result = toValue * 9 / 5 + 32;
+          } else if (toUnit === 'fahrenheit' && fromUnit === 'celsius') {
+            result = (toValue - 32) * 5 / 9;
+          } else if (toUnit === 'celsius' && fromUnit === 'kelvin') {
+            result = parseFloat(toValue) + 273.15;
+          } else if (toUnit === 'kelvin' && fromUnit === 'celsius') {
+            result = toValue - 273.15;
+          }
+        } else if (conversionType === 'area') {
+          if (toUnit === 'sqm' && fromUnit === 'sqf') {
+            result = toValue * 10.764;
+          } else if (toUnit === 'sqf' && fromUnit === 'sqm') {
+            result = toValue / 10.764;
+          }
+        }
+
+        this.setState({ fromValue: result });
+      };
+
+      render() {
+        const { conversionType, fromUnit, toUnit, fromValue, toValue } = this.state;
+
+        const lengthUnits = ['metres', 'feet'];
+        const weightUnits = ['kilograms', 'pounds'];
+        const temperatureUnits = ['celsius', 'fahrenheit', 'kelvin'];
+        const areaUnits = ['sqm', 'sqf'];
+
+        let units = [];
+        if (conversionType === 'length') {
+          units = lengthUnits;
+        } else if (conversionType === 'weight') {
+          units = weightUnits;
+        } else if (conversionType === 'temperature') {
+          units = temperatureUnits;
+        } else if (conversionType === 'area') {
+          units = areaUnits;
+        }
+
+        return (
+          <div>
+            <h2>Unit Converter</h2>
+
+            <label>
+              <select id="conversion-type" value={conversionType} onChange={this.handleConversionTypeChange}>
+                <option value="length">Length</option>
+                <option value="weight">Weight</option>
+                <option value="temperature">Temperature</option>
+                <option value="area">Area</option>
+              </select>
+            </label>
+
+            <br /><br />
+
+            <label>
+              <select id="lhs-unit" value={fromUnit} onChange={(e) => this.handleUnitChange(e, true)}>
+                {units.map((unit) => (
+                  <option key={unit} value={unit}>
+                    {unit}
+                  </option>
+                ))}
+              </select>
+              <input id="lhs-input"
+                type="number"
+                value={fromValue}
+                onChange={this.handleFromValueChange}
+              />
+            </label>
+
+            <label>
+              <select id="rhs-unit" value={toUnit} onChange={(e) => this.handleUnitChange(e, false)}>
+                {units.map((unit) => (
+                  <option key={unit} value={unit}>
+                    {unit}
+                  </option>
+                ))}
+              </select>
+              <input id="rhs-input"
+                type="number"
+                value={toValue}
+                onChange={this.handleToValueChange}
+              />
+            </label>
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(<Converter />, document.getElementById('root'));
+  </script>
+</body>
+</html>
