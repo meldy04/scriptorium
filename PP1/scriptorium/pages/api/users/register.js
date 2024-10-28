@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import prisma from '';
+import prisma from "@/utils/db";
 
 export default async function handler(req, res) {
     const { email, password, firstName, lastName, avatar, phone } = req.body;
