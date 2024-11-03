@@ -24,8 +24,8 @@ model User {
   role      String        @default("USER")
   templates Template[]
   blogPosts BlogPost[]
+  Comment Comment[]
 }
-
 
 model Template {
   id          Int       @id @default(autoincrement())
@@ -36,8 +36,7 @@ model Template {
   language    String
   userID      Int
   user        User      @relation(fields: [userID], references: [id])
-
-  BlogPost BlogPost[]
+  BlogPost    BlogPost[]
 }
 
 model BlogPost {
@@ -49,4 +48,15 @@ model BlogPost {
   templates   Template[]
   userId      Int
   user        User       @relation(fields:[userId], references:[id])
+  comments    Comment[]
+  votes       Int         @default(0)
+}
+
+model Comment {
+    id          Int     @id @default(autoincrement())
+    content     String
+    userId      Int
+    blogPostId  Int
+    user        User    @relation(fields: [userId], references: [id])
+    blogPost    BlogPost  @relation(fields: [blogPostId], references: [id])
 }
