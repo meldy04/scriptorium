@@ -1,10 +1,19 @@
-export default async function handler(req, res) {
-    const { id } = req.query;
+import prisma from "@/utils/db";
+import auth from "@/utils/auth";
 
-    try {
-        await prisma.template.delete({ where: {id: parseInt(id) }});
-        res.status(200).json({ message: 'Template successfully deleted' });
-    } catch (error) {
-        res.status(400).json({ error: 'Failed to delete template' });
-    }
+export default async function handler(req, res) {
+    await auth(req, res, async () => {
+        if (req.method === 'DELETE') {
+            const { id } = req.body;
+
+            try {
+                await prisma.template.delete({ where: { id: parseInt(id) }});
+                return res.status(200).json({ message: 'Template successfully deleted' });
+            } catch (error) {
+                return res.status(400).json({ error: 'Failed to delete template' });
+            }
+        } else {
+            return res.status(405).json({ error: 'Method not allowed' });
+        }
+    });   
 }

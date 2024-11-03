@@ -12,7 +12,6 @@ export default async function handler(req, res) {
                 });
                 return res.status(204).json({ message: 'Blog post successfully deleted' });
             } catch (error) {
-                console.error("Error deleting blog post:", error);
                 return res.status(400).json({ error: 'Failed to delete blog post', details: error.message });
             }
         } else {
