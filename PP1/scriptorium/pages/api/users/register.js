@@ -3,20 +3,35 @@ import jwt from 'jsonwebtoken';
 import prisma from "@/utils/db";
 
 export default async function handler(req, res) {
-    const { email, password, firstName, lastName, avatar, phone } = req.body;
+    try {
+        const { email, password, firstName, lastName, avatar, phone } = req.body;
 
-    const hashedPassword  = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-        data: {
-            email,
-            password: hashedPassword,
-            firstName,
-            lastName,
-            avatar,
-            phone,
-        },
-    });
+        // Check if the email already exists in the database
+        const existingUser = await prisma.user.findUnique({
+            where: { email }
+        });
 
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET);
-    res.status(201).json({ user, token });
+        if (existingUser) {
+            return res.status(400).json({ error: "Email is already registered" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = await prisma.user.create({
+            data: {
+                email,
+                password: hashedPassword,
+                firstName,
+                lastName,
+                avatar,
+                phone,
+            },
+        });
+
+        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET);
+        return res.status(201).json({ message: "User registered successfully", user, token });
+
+    } catch (error) {
+        res.status(500).json({ error: "An unexpected error occurred while registering the user" });
+    }
 }
