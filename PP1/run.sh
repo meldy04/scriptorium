@@ -1,5 +1,5 @@
 # Navigate to project directory
-cd PP1/scriptorium
+cd scriptorium
 
 # Start application
 npm run dev
