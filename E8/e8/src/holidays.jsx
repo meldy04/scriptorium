@@ -1,21 +1,35 @@
+import { all } from "axios";
 import React, { useState, useEffect } from "react";
 
 export default function Holidays() {
   const [holidays, setHolidays] = useState([]);
   const [year, setYear] = useState(2024);
+  const [province, setProvince] = useState("all");
 
-  const fetchHolidays = async (year) => {
-    const response = await fetch(`https://canada-holidays.ca/api/v1/holidays?year=${year}`);
-    const data = await response.json();
-    setHolidays(data.holidays);
+  const fetchHolidays = async (year, province) => {
+    try {
+        let url = `https://canada-holidays.ca/api/v1/holidays?year=${year}`;
+        if (province !== "all") {
+            url += `&province=${province}`;
+        }
+        const response = await fetch(url);
+        const data = await response.json();
+        setHolidays(data.holidays || []);
+    } catch (error) {
+        setHolidays([]);
+    }  
   };
 
   useEffect(() => {
-    fetchHolidays(year);
-  }, [year]);
+    fetchHolidays(year, province);
+  }, [year, province]);
 
   const handleYearChange = (event) => {
     setYear(event.target.value);
+  };
+
+  const handleProvinceChange = (event) => {
+    setProvince(event.target.value);
   };
 
   return (
@@ -62,6 +76,25 @@ export default function Holidays() {
             </option>
         ))}
       </select>
+
+      <label htmlFor="province-filter">Filter by Province:</label>
+      <select id="province-filter" value={province} onChange={handleProvinceChange}>
+        <option value="all">All Provinces</option>
+        <option value="nl">Newfoundland and Labrador</option>
+        <option value="pe">Prince Edward Island</option>
+        <option value="ns">Nova Scotia</option>
+        <option value="nb">New Brunswick</option>
+        <option value="qc">Quebec</option>
+        <option value="on">Ontario</option>
+        <option value="mb">Manitoba</option>
+        <option value="sk">Saskatchewan</option>
+        <option value="ab">Alberta</option>
+        <option value="bc">British Columbia</option>
+        <option value="yt">Yukon</option>
+        <option value="nt">Northwest Territories</option>
+        <option value="nu">Nunavut</option>
+      </select>
+
       <table>
         <thead>
           <tr>
