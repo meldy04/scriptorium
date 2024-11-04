@@ -46,7 +46,7 @@
 						"register"
 					]
 				},
-				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response. The test here registers a user by providing JSON data and outputs a response code given the scenario.\n\nA successful POST request typically returns a`201 Created` response code."
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response. The test here registers a user by providing JSON data and outputs a response code given the scenario.\n\nA successful POST request returns a`201 Created` response code."
 			},
 			"response": []
 		},
@@ -341,14 +341,20 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}api/blogs/2/comments",
+					"raw": "{{base_url}}api/blogs/:id/comments",
 					"host": [
 						"{{base_url}}api"
 					],
 					"path": [
 						"blogs",
-						"2",
+						":id",
 						"comments"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
 					]
 				},
 				"description": "This is an endpoint allowing registered users to comment on existsing blog posts on the system. The POST request is used to input data into the prisma database and increment the comments model.\n\nThe system ensures that the request body is not null, returning `400 Bad Request` if it is and successful response will have a `201 CREATED` status."
@@ -394,14 +400,20 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}api/blogs/2/vote",
+					"raw": "{{base_url}}api/blogs/:id/vote",
 					"host": [
 						"{{base_url}}api"
 					],
 					"path": [
 						"blogs",
-						"2",
+						":id",
 						"vote"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
 					]
 				},
 				"description": "This is an endpoint allowing registered users to vote 'up' or 'down' on existsing blog posts on the system. The POST request is used to input data into the prisma database and increment the vote count for blogs.\n\nA successful response will have a `200 OK` status."
@@ -547,13 +559,19 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}api/templates/1",
+					"raw": "{{base_url}}api/templates/:id",
 					"host": [
 						"{{base_url}}api"
 					],
 					"path": [
 						"templates",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
 					]
 				},
 				"description": "This is a GET request and it is used to \"get\" template data from the database. This can be used by either a registered user or a site visitor, hence authorrisation is not needed. As a GET request, there is no request body, but we use query parameters to specify the resource to get data for.\n\nA successful GET response will have a `200 OK` status."
@@ -599,14 +617,20 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}api/templates/edit/1",
+					"raw": "{{base_url}}api/templates/edit/:id",
 					"host": [
 						"{{base_url}}api"
 					],
 					"path": [
 						"templates",
 						"edit",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
 					]
 				},
 				"description": "This PUT request allows users to edit existing templates with updated data given the id of the template. A user will be able to make edits to their template.\n\nA successful response will have a `200 OK` status."
@@ -652,14 +676,20 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}api/templates/edit/1",
+					"raw": "{{base_url}}api/templates/edit/:id",
 					"host": [
 						"{{base_url}}api"
 					],
 					"path": [
 						"templates",
 						"edit",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
 					]
 				},
 				"description": "This PUT request allows visitors to edit existing templates with updated data by creating a fork of the original template.\n\nA successful response will have a `200 OK` status."
@@ -705,17 +735,246 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}api/templates/delete/2",
+					"raw": "{{base_url}}api/templates/delete/:id",
 					"host": [
 						"{{base_url}}api"
 					],
 					"path": [
 						"templates",
 						"delete",
-						"2"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
 					]
 				},
 				"description": "This DELETE request allows users to delete existing templates with updated data given the id of the template.\n\nA successful response will have a `200 OK` status and output a message."
+			},
+			"response": []
+		},
+		{
+			"name": "reportContent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoibmV3dXNlcjRAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzA2ODc0MDksImV4cCI6MTczMDY5MTAwOX0.jwwW8ivOArWGvm7uKXW5KY4yEON2Qg35cEr7loI88dY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"explanation\": \"This post contains abusive language.\",\n  \"userId\": 1,\n  \"blogPostId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}api/report",
+					"host": [
+						"{{base_url}}api"
+					],
+					"path": [
+						"report"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request allows a registered user to report inappropriate content including blog posts and/or blog comments.\n\nA successful POST request returns a`201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "hideContent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoibmV3dXNlcjRAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzA2ODc2MjAsImV4cCI6MTczMDY5MTIyMH0.7kGunu5CoebYM5ug-3TfEtbcy_ZCxUT7t2DYgwB5u6M",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"contentId\": 1,\n  \"contentType\": \"BlogPost\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}api/admin/hideContent",
+					"host": [
+						"{{base_url}}api"
+					],
+					"path": [
+						"admin",
+						"hideContent"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request allows a registered admin user to hide content, making it inaccessible to other users.\n\nA successful POST request returns a`201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "sortPosts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoibmV3dXNlcjRAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzA2ODc2MjAsImV4cCI6MTczMDY5MTIyMH0.7kGunu5CoebYM5ug-3TfEtbcy_ZCxUT7t2DYgwB5u6M",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}api/admin/sort?contentType=BlogPost",
+					"host": [
+						"{{base_url}}api"
+					],
+					"path": [
+						"admin",
+						"sort"
+					],
+					"query": [
+						{
+							"key": "contentType",
+							"value": "BlogPost"
+						}
+					]
+				},
+				"description": "This is a GET request, returning a sorted list of blog posts. In order to sort the post, the user must be registered and categorised as an admin user.\n\nA successful GET request returns a`200 OK` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "authorViewHidden",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoibmV3dXNlcjRAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzA2ODc2MjAsImV4cCI6MTczMDY5MTIyMH0.7kGunu5CoebYM5ug-3TfEtbcy_ZCxUT7t2DYgwB5u6M",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}api/posts/:postId",
+					"host": [
+						"{{base_url}}api"
+					],
+					"path": [
+						"posts",
+						":postId"
+					],
+					"variable": [
+						{
+							"key": "postId",
+							"value": ""
+						}
+					]
+				},
+				"description": "This is a GET request, returning a hidden blog post to the author of said post. In order to sort the post, the user must be logged into their account and the author of the hidden post.\n\nA successful GET request returns a`200 OK` response code."
 			},
 			"response": []
 		}
