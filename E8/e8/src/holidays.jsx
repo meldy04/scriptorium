@@ -2,16 +2,21 @@ import React, { useState, useEffect } from "react";
 
 export default function Holidays() {
   const [holidays, setHolidays] = useState([]);
+  const [year, setYear] = useState(2024);
 
-  const fetchHolidays = async () => {
-    const response = await fetch("https://canada-holidays.ca/api/v1/holidays");
+  const fetchHolidays = async (year) => {
+    const response = await fetch(`https://canada-holidays.ca/api/v1/holidays?year=${year}`);
     const data = await response.json();
     setHolidays(data.holidays);
   };
 
   useEffect(() => {
-    fetchHolidays();
-  }, []);
+    fetchHolidays(year);
+  }, [year]);
+
+  const handleYearChange = (event) => {
+    setYear(event.target.value);
+  };
 
   return (
     <div>
@@ -47,7 +52,16 @@ export default function Holidays() {
           color: white;
         }
       `}</style>
-      <h1>Holidays </h1>
+
+      <h1>Holidays</h1>
+      <label htmlFor="year-filter">Filter by Year:</label>
+      <select id="year-filter" value={year} onChange={handleYearChange}>
+        {Array.from({ length: 11 }, (_, i) => 2020 + i).map((yearOption) => (
+            <option key={yearOption} value={yearOption}>
+                {yearOption}
+            </option>
+        ))}
+      </select>
       <table>
         <thead>
           <tr>
