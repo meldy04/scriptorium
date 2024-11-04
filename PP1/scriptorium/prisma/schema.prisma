@@ -50,6 +50,8 @@ model BlogPost {
   user        User       @relation(fields:[userId], references:[id])
   comments    Comment[]
   votes       Int         @default(0)
+  reports     Report[]
+  isHidden    Boolean     @default(false)
 }
 
 model Comment {
@@ -59,4 +61,17 @@ model Comment {
     blogPostId  Int
     user        User    @relation(fields: [userId], references: [id])
     blogPost    BlogPost  @relation(fields: [blogPostId], references: [id])
+    reports     Report[]
+    isHidden    Boolean     @default(false)
+}
+
+model Report {
+  id          Int       @id @default(autoincrement())
+  explanation String
+  userId      Int       
+  blogPostId  Int?      
+  commentId   Int?      
+  createdAt   DateTime  @default(now())
+  Comment Comment[]
+  BlogPost BlogPost[]
 }
