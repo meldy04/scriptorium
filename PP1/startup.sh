@@ -41,7 +41,7 @@ node -e "
 const prisma = require('./utils/db');
 (async () => {
     await prisma.user.create({
-        data: { username: 'admin', password: 'admin123', role: 'admin' }
+        data: { username: 'admin', password: 'admin123', role: 'ADMIN' }
     });
     console.log('Admin user created successfully');
     await prisma.$disconnect();
