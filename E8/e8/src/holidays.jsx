@@ -1,10 +1,11 @@
-import { all } from "axios";
 import React, { useState, useEffect } from "react";
 
 export default function Holidays() {
   const [holidays, setHolidays] = useState([]);
   const [year, setYear] = useState(2024);
   const [province, setProvince] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const holidaysPerPage = 10;
 
   const fetchHolidays = async (year, province) => {
     try {
@@ -30,6 +31,24 @@ export default function Holidays() {
 
   const handleProvinceChange = (event) => {
     setProvince(event.target.value);
+  };
+
+  const indexOfLastHoliday = currentPage * holidaysPerPage;
+  const indexOfFirstHoliday = indexOfLastHoliday - holidaysPerPage;
+  const currentHolidays = holidays.slice(indexOfFirstHoliday, indexOfLastHoliday);
+
+  const totalPages = Math.ceil(holidays.length / holidaysPerPage);
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   return (
@@ -64,6 +83,23 @@ export default function Holidays() {
         th {
           background-color: #4caf50;
           color: white;
+        }
+        
+        .pagination {
+          display: flex;
+          justify-content: center;
+          margin-top: 20px;
+        }
+
+        .pagination button {
+          padding: 10px;
+          margin: 0 5px;
+          cursor: pointer;
+        }
+        
+        .pagination button:disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
         }
       `}</style>
 
@@ -104,7 +140,12 @@ export default function Holidays() {
           </tr>
         </thead>
         <tbody>
-          {holidays.map((holiday) => (
+          {currentHolidays
+            .filter((holiday) => {
+              if (province === "all") return true;
+              return holiday.provinces.some((pr) => pr.id.toLowerCase() === province.toLowerCase());
+            })
+          .map((holiday) => (
             <tr key={holiday.id}>
               <td>{holiday.date}</td>
               <td>{holiday.nameEn}</td>
@@ -112,12 +153,21 @@ export default function Holidays() {
               <td>
                 {holiday.federal
                   ? "Federal"
-                  : holiday.provinces.map((pr) => pr.id).join(" ")}
+                  : holiday.provinces
+                      .map((pr) => pr.id).join(", ")}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        <button id="prev-page" onClick={goToPreviousPage} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <button id="next-page" onClick={goToNextPage} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
     </div>
   );
 }
