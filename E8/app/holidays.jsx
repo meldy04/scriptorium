@@ -1,12 +1,24 @@
+'use client';
+
 import React, { useState, useEffect, useMemo } from "react";
 
 export default function Holidays() {
   const [holidays, setHolidays] = useState([]);
-  const [year, setYear] = useState(localStorage.getItem("year") || 2024);
-  const [province, setProvince] = useState(localStorage.getItem("province") || "all");
+  const [year, setYear] = useState(2024);
+  const [province, setProvince] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState(localStorage.getItem("searchQuery") || "");
+  const [searchQuery, setSearchQuery] = useState("");
+
   const holidaysPerPage = 10;
+
+  useEffect(() => {
+    // Only run this on the client side after the component mounts
+    if (typeof window !== "undefined") {
+      setYear(localStorage.getItem("year") || 2024);
+      setProvince(localStorage.getItem("province") || "all");
+      setSearchQuery(localStorage.getItem("searchQuery") || "");
+    }
+  }, []);
 
   const fetchHolidays = async (year, province) => {
     try {
@@ -27,17 +39,12 @@ export default function Holidays() {
   }, [year, province]);
 
   useEffect(() => {
-    // Store values to localStorage on change
-    localStorage.setItem("year", year);
-  }, [year]);
-
-  useEffect(() => {
-    localStorage.setItem("province", province);
-  }, [province]);
-
-  useEffect(() => {
-    localStorage.setItem("searchQuery", searchQuery);
-  }, [searchQuery]);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("year", year);
+      localStorage.setItem("province", province);
+      localStorage.setItem("searchQuery", searchQuery);
+    }
+  }, [year, province, searchQuery]);
 
   const handleYearChange = (event) => {
     setYear(event.target.value);
@@ -49,7 +56,7 @@ export default function Holidays() {
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
-  }
+  };
 
   const filteredHolidays = useMemo(() => {
     return holidays.filter((holiday) => {
@@ -111,7 +118,7 @@ export default function Holidays() {
           background-color: #4caf50;
           color: white;
         }
-        
+
         .pagination {
           display: flex;
           justify-content: center;
@@ -123,7 +130,7 @@ export default function Holidays() {
           margin: 0 5px;
           cursor: pointer;
         }
-        
+
         .pagination button:disabled {
           cursor: not-allowed;
           opacity: 0.5;
