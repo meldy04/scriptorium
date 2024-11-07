@@ -2,29 +2,42 @@ import React, { useState, useEffect, useMemo } from "react";
 
 export default function Holidays() {
   const [holidays, setHolidays] = useState([]);
-  const [year, setYear] = useState(2024);
-  const [province, setProvince] = useState("all");
+  const [year, setYear] = useState(localStorage.getItem("year") || 2024);
+  const [province, setProvince] = useState(localStorage.getItem("province") || "all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(localStorage.getItem("searchQuery") || "");
   const holidaysPerPage = 10;
 
   const fetchHolidays = async (year, province) => {
     try {
-        let url = `https://canada-holidays.ca/api/v1/holidays?year=${year}`;
-        if (province !== "all") {
-            url += `&province=${province}`;
-        }
-        const response = await fetch(url);
-        const data = await response.json();
-        setHolidays(data.holidays || []);
+      let url = `https://canada-holidays.ca/api/v1/holidays?year=${year}`;
+      if (province !== "all") {
+        url += `&province=${province}`;
+      }
+      const response = await fetch(url);
+      const data = await response.json();
+      setHolidays(data.holidays || []);
     } catch (error) {
-        setHolidays([]);
-    }  
+      setHolidays([]);
+    }
   };
 
   useEffect(() => {
     fetchHolidays(year, province);
   }, [year, province]);
+
+  useEffect(() => {
+    // Store values to localStorage on change
+    localStorage.setItem("year", year);
+  }, [year]);
+
+  useEffect(() => {
+    localStorage.setItem("province", province);
+  }, [province]);
+
+  useEffect(() => {
+    localStorage.setItem("searchQuery", searchQuery);
+  }, [searchQuery]);
 
   const handleYearChange = (event) => {
     setYear(event.target.value);
@@ -166,21 +179,17 @@ export default function Holidays() {
         <option value="nu">Nunavut</option>
       </select>
 
-      <table>
+      <table id="holidays-table">
         <thead>
           <tr>
             <th>Date</th>
             <th>Name</th>
-            <th>Name (FR)</th> <th>Provinces</th>
+            <th>Name (FR)</th>
+            <th>Province(s)</th>
           </tr>
         </thead>
         <tbody>
-          {currentHolidays
-            .filter((holiday) => {
-              if (province === "all") return true;
-              return holiday.provinces.some((pr) => pr.id.toLowerCase() === province.toLowerCase());
-            })
-          .map((holiday) => (
+          {currentHolidays.map((holiday) => (
             <tr key={holiday.id}>
               <td>{holiday.date}</td>
               <td>{holiday.nameEn}</td>
@@ -188,8 +197,7 @@ export default function Holidays() {
               <td>
                 {holiday.federal
                   ? "Federal"
-                  : holiday.provinces
-                      .map((pr) => pr.id).join(", ")}
+                  : holiday.provinces.map((pr) => pr.id).join(", ")}
               </td>
             </tr>
           ))}
