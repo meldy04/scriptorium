@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 export default function Holidays() {
   const [holidays, setHolidays] = useState([]);
   const [year, setYear] = useState(2024);
   const [province, setProvince] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const holidaysPerPage = 10;
 
   const fetchHolidays = async (year, province) => {
@@ -33,11 +34,24 @@ export default function Holidays() {
     setProvince(event.target.value);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  }
+
+  const filteredHolidays = useMemo(() => {
+    return holidays.filter((holiday) => {
+      const matchesSearch = holiday.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            holiday.nameFr.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesProvince = province === "all" || holiday.provinces.some((pr) => pr.id.toLowerCase() === province.toLowerCase());
+      return matchesSearch && matchesProvince;
+    });
+  }, [holidays, searchQuery, province]);
+
   const indexOfLastHoliday = currentPage * holidaysPerPage;
   const indexOfFirstHoliday = indexOfLastHoliday - holidaysPerPage;
-  const currentHolidays = holidays.slice(indexOfFirstHoliday, indexOfLastHoliday);
+  const currentHolidays = filteredHolidays.slice(indexOfFirstHoliday, indexOfLastHoliday);
 
-  const totalPages = Math.ceil(holidays.length / holidaysPerPage);
+  const totalPages = Math.ceil(filteredHolidays.length / holidaysPerPage);
 
   const goToNextPage = () => {
     if (currentPage < totalPages) {
@@ -101,9 +115,30 @@ export default function Holidays() {
           cursor: not-allowed;
           opacity: 0.5;
         }
+
+        .search-bar {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 20px;
+        }
+        .search-bar input {
+          padding: 10px;
+          width: 200px;
+          font-size: 16px;
+        }
       `}</style>
 
       <h1>Holidays</h1>
+      <div className="search-bar">
+        <label htmlFor="holiday-search">Search Holidays:</label>
+        <input
+          type="text"
+          id="holiday-search"
+          placeholder="Search by holiday name"
+          value={searchQuery}
+          onChange={handleSearchChange}
+        />
+      </div>
       <label htmlFor="year-filter">Filter by Year:</label>
       <select id="year-filter" value={year} onChange={handleYearChange}>
         {Array.from({ length: 11 }, (_, i) => 2020 + i).map((yearOption) => (
