@@ -35,7 +35,7 @@ const HomePage: React.FC = () => {
 
   return (
       <div>
-        <header>
+        <header id="header">
           <nav id="navbar" className="bg-gray-800 text-white p-4">
             <div className="container mx-auto flex items-center justify-between">
               <div className="text-2xl font-bold">
@@ -44,10 +44,10 @@ const HomePage: React.FC = () => {
                 </Link>
               </div>
               <div id="nav-links" className="hidden md:flex space-x-6">
-                <Link href="#authors" className="hover:text-gray-400">Authors</Link>
-                <Link href="#stores" className="hover:text-gray-400">Stores</Link>
-                <Link href="#books" className="hover:text-gray-400">Books</Link>
-                <Link href="#contact" className="hover:text-gray-400">Contact</Link>
+                <Link id={"authors"} href="#authors" className="hover:text-gray-400">Authors</Link>
+                <Link id={"stores"} href="#stores" className="hover:text-gray-400">Stores</Link>
+                <Link id={"books"} href="#books" className="hover:text-gray-400">Books</Link>
+                <Link id={"contact"} href="#contact" className="hover:text-gray-400">Contact</Link>
               </div>
               <button
                   onClick={toggleMenu}
@@ -117,12 +117,12 @@ const HomePage: React.FC = () => {
 
         <footer id="footer" className="bg-gray-800 text-white p-4">
           <div className="container mx-auto flex sm:flex-col lg:flex-row items-center justify-between">
-            <div className="text-l font-bold mb-4 sm:mb-0">
+            <div className="contact-info text-l font-bold mb-4 sm:mb-0">
               <Link href="/" aria-label="Home">
                 Contact: info@example.com
               </Link>
             </div>
-            <div id="nav-links" className="flex sm:flex-col lg:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+            <div id="nav-links" className="social-media-links flex sm:flex-col lg:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
               <Link href="#facebook" className="hover:text-gray-400">Facebook</Link>
               <Link href="#twitter" className="hover:text-gray-400">X</Link>
               <Link href="#insta" className="hover:text-gray-400">Instagram</Link>
