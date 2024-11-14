@@ -36,41 +36,58 @@ const HomePage: React.FC = () => {
   return (
       <div>
         <header id="header">
-          <nav id="navbar" className="bg-gray-800 text-white p-4">
-            <div className="container mx-auto flex items-center justify-between">
-              <div className="text-2xl font-bold">
-                <Link href="/" aria-label="Home">
-                  Logo
-                </Link>
-              </div>
-              <div id="nav-links" className="hidden md:flex space-x-6">
-                <Link id={"authors"} href="#authors" className="hover:text-gray-400">Authors</Link>
-                <Link id={"stores"} href="#stores" className="hover:text-gray-400">Stores</Link>
-                <Link id={"books"} href="#books" className="hover:text-gray-400">Books</Link>
-                <Link id={"contact"} href="#contact" className="hover:text-gray-400">Contact</Link>
-              </div>
-              <button
-                  onClick={toggleMenu}
-                  id="hamburger-menu"
-                  className="md:hidden p-2 rounded bg-gray-700 hover:bg-gray-600"
-                  aria-label="Toggle Menu"
-              >
-                <div className="w-5 h-1 bg-white mb-1"></div>
-                <div className="w-5 h-1 bg-white mb-1"></div>
-                <div className="w-5 h-1 bg-white"></div>
-              </button>
+          <nav id="navbar" className="flex justify-between items-center p-4 bg-gray-800">
+            {/* Logo */}
+            <div className="text-white text-xl">Logo</div>
+
+            {/* Navbar Links for large screens */}
+            <div
+                id="nav-links"
+                className="hidden md:flex space-x-4 text-white"
+            >
+              <a href="#home">Home</a>
+              <a href="#about">About</a>
+              <a href="#services">Services</a>
+              <a href="#contact">Contact</a>
             </div>
 
-            {isMenuOpen && (
-                <div id="nav-links-sm" className="md:hidden flex flex-col mt-2 space-y-2 px-4 pb-4 bg-gray-700">
-                  <Link href="#home" className="hover:text-gray-400">Home</Link>
-                  <Link href="#about" className="hover:text-gray-400">About</Link>
-                  <Link href="#services" className="hover:text-gray-400">Services</Link>
-                  <Link href="#contact" className="hover:text-gray-400">Contact</Link>
-                </div>
-            )}
+            {/* Hamburger Menu for small screens */}
+            <button
+                id="hamburger-menu"
+                className="block md:hidden text-white"
+                onClick={toggleMenu}
+            >
+              <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+              >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+
+            {/* Menu for small screens */}
+            <div
+                id="nav-links-sm"
+                className={`${
+                    isMenuOpen ? "block" : "hidden"
+                } absolute top-0 right-0 mt-12 w-48 bg-gray-800 text-white flex flex-col items-center space-y-4 p-4 md:hidden`}
+            >
+              <a id={"authors"} href="#authors" onClick={() => setIsMenuOpen(false)}>Authors</a>
+              <a id={"stores"} href="#about" onClick={() => setIsMenuOpen(false)}>Stores</a>
+              <a id={"books"} href="#services" onClick={() => setIsMenuOpen(false)}>Books</a>
+              <a id={"contact"} href="#contact" onClick={() => setIsMenuOpen(false)}>Contact</a>
+            </div>
           </nav>
         </header>
+
 
         <main id="main-content" className="relative px-6 pt-14 lg:px-8">
           <section className="container mx-auto p-4">
