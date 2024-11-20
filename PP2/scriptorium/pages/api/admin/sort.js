@@ -13,11 +13,11 @@ export default async function handler(req, res) {
       try {
         const reportedContent = await prisma[contentType.toLowerCase()].findMany({
           where: {
-            reports: { some: {} }, // Ensure it only fetches reported content
+            reports: { some: {} },
           },
           orderBy: {
             reports: {
-              _count: "desc", // Sort by the count of reports
+              _count: "desc",
             },
           },
           include: {

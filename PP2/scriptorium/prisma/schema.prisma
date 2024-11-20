@@ -14,64 +14,64 @@ datasource db {
 }
 
 model User {
-  id        Int         @id @default(autoincrement())
-  email     String      @unique
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
   password  String
   firstName String
   lastName  String
   avatar    String?
   phone     String?
-  role      String        @default("USER")
+  role      String     @default("USER")
   templates Template[]
   blogPosts BlogPost[]
-  Comment Comment[]
+  Comment   Comment[]
 }
 
 model Template {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   title       String
   explanation String
   tags        String
   code        String
   language    String
   userID      Int
-  user        User      @relation(fields: [userID], references: [id])
+  user        User       @relation(fields: [userID], references: [id])
   BlogPost    BlogPost[]
 }
 
 model BlogPost {
-  id          Int         @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   title       String
   description String
   content     String
   tags        String
   templates   Template[]
   userId      Int
-  user        User       @relation(fields:[userId], references:[id])
+  user        User       @relation(fields: [userId], references: [id])
   comments    Comment[]
-  votes       Int         @default(0)
+  votes       Int        @default(0)
   reports     Report[]
-  isHidden    Boolean     @default(false)
+  isHidden    Boolean    @default(false)
 }
 
 model Comment {
-    id          Int     @id @default(autoincrement())
-    content     String
-    userId      Int
-    blogPostId  Int
-    user        User    @relation(fields: [userId], references: [id])
-    blogPost    BlogPost  @relation(fields: [blogPostId], references: [id])
-    reports     Report[]
-    isHidden    Boolean     @default(false)
+  id         Int      @id @default(autoincrement())
+  content    String
+  userId     Int
+  blogPostId Int
+  user       User     @relation(fields: [userId], references: [id])
+  blogPost   BlogPost @relation(fields: [blogPostId], references: [id])
+  reports    Report[]
+  isHidden   Boolean  @default(false)
 }
 
 model Report {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   explanation String
-  userId      Int       
-  blogPostId  Int?      
-  commentId   Int?      
-  createdAt   DateTime  @default(now())
-  Comment Comment[]
-  BlogPost BlogPost[]
+  userId      Int
+  blogPostId  Int?
+  commentId   Int?
+  createdAt   DateTime   @default(now())
+  Comment     Comment[]
+  BlogPost    BlogPost[]
 }

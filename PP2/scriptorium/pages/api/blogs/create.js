@@ -6,7 +6,7 @@ export default async function handler(req, res) {
         if (req.method === 'POST') {
             const { title, description, content, tags, templateIds = [] } = req.body;
             const userId = req.user.userId;
-    
+
             try {
                 const templates = await prisma.template.findMany({
                     where: { id: { in: templateIds } },

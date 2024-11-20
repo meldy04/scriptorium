@@ -13,12 +13,12 @@ export default async function handler(req, res) {
         }
 
         const template = await prisma.template.create({
-          data: { 
-            title, 
-            explanation, 
-            tags, 
-            code, 
-            language, 
+          data: {
+            title,
+            explanation,
+            tags,
+            code,
+            language,
             user: { connect: { id: userId } }
           },
         });

@@ -3,7 +3,7 @@ import auth from "@/utils/auth";
 
 export default async function handler(req, res) {
     const { id } = req.query;
-    
+
     if(req.method === 'POST') {
         await auth(req, res, async () => {
             const { content } = req.body;
