@@ -51,18 +51,14 @@ export default async function handler(req, res) {
                     },
                 },
                 orderBy: {
-                    [sort]: order, // Sort the results by the provided field and order
+                    [sort]: order,
                 },
-                skip: (page - 1) * limit,  // Pagination: skip posts
-                take: parseInt(limit),     // Limit the number of results per page
+                skip: (page - 1) * limit,
+                take: parseInt(limit),
             });
 
-            // Log the fetched blog posts for debugging
-            console.log("Fetched Blog Posts:", blogPosts);
-
-            res.status(200).json(blogPosts); // Return the fetched blog posts
+            res.status(200).json(blogPosts);
         } catch (error) {
-            console.error("Error while fetching blog posts:", error); // Log any errors
             res.status(500).json({
                 error: "Something went wrong. Please try again later.",
                 details: error.message || error, // Send more detailed error message
@@ -97,8 +93,8 @@ export default async function handler(req, res) {
             } catch (error) {
                 res.status(400).json({ error: 'Failed to create blog post' });
             }
-        }, 'USER'); // Authentication middleware only for POST requests
+        }, 'USER');
     } else {
-        res.status(405).json({ error: 'Method not allowed' }); // Handle non-GET and non-POST requests
+        res.status(405).json({ error: 'Method not allowed' });
     }
 }

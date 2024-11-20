@@ -4,10 +4,10 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
             const blogPosts = await prisma.blogPost.findMany({
-                orderBy: { votes: 'desc' }, // Sort blog posts by votes in descending order
+                orderBy: { votes: 'desc' },
                 include: {
                     comments: {
-                        orderBy: { votes: 'desc' }, // Sort comments by votes in descending order
+                        orderBy: { votes: 'desc' },
                     },
                 },
             });
