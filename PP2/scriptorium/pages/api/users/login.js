@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: "Invalid credentials"});
     }
 
-    const token = generateToken({ userId: user.id, email: user.email });
+    const token = generateToken({ userId: user.id, email: user.email, role: user.role });
     return res.status(200).json({ token });
   } catch {
     res.status(500).json({ error: "An unexpected error occured while logging in" });

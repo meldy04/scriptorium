@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const auth = (req, res, next) => {
+const auth = (req, res, next, requiredRole = null) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
         return res.status(401).json({ message: 'Unauthorized' });
@@ -10,6 +10,11 @@ const auth = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
+
+        if (requiredRole && req.user.role !== requiredRole) {
+            return res.status(403).json({ message: 'Forbidden: Logged in Access Only'})
+        }
+
         next();
     } catch {
         res.status(401).json({ message: 'Unauthorized' });

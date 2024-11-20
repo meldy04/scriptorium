@@ -5,12 +5,12 @@ export default async function handler(req, res) {
     await auth(req, res, async () => {
         if (req.method === 'PUT') {
             const { userId, firstName, lastName, avatar, phone } = req.body;
-            
-            try {
-                if (req.user.userId !== userId) {
-                    return res.status(403).json({ error: 'Denied - you can only edit your own profile' });
-                }
 
+            if (req.user.userId !== userId) {
+                return res.status(403).json({ error: 'Denied - you can only edit your own profile' });
+            }
+
+            try {
                 const updatedUser = await prisma.user.update({
                     where: { id: userId },
                     data: { firstName, lastName, avatar, phone },
@@ -21,6 +21,6 @@ export default async function handler(req, res) {
             }
         } else {
             res.status(405).json({ error: 'Method not allowed' });
-        }   
-    });  
+        }
+    }, 'USER');
 }
