@@ -1,0 +1,26 @@
+services:
+  node-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    privileged: true
+    environment:
+      DOCKER_HOST: "tcp://docker:2375"
+    depends_on:
+      - docker
+    networks:
+      - dind-network
+
+  docker:
+    image: docker:latest
+    privileged: true
+    command: ["dockerd", "--host=tcp://0.0.0.0:2375"]
+    volumes:
+      - "/var/lib/docker"
+    networks:
+      - dind-network
+
+networks:
+  dind-network:
