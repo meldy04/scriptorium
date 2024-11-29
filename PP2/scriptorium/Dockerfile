@@ -16,6 +16,9 @@ RUN apk add --no-cache docker openrc bash
 # Copy the rest of the application's source code
 COPY . .
 
+# Generate the prisma database
+RUN npx prisma generate
+
 # Build the Next.js application
 RUN npm run build
 
