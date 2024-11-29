@@ -2,26 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Define the light theme variables */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary-bg: #ffffff;
+  --primary-text: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Define the dark theme variables */
+html.dark {
+  --background: #000000;
+  --foreground: #ededed;
+  --primary-bg: #1f1f1f;
+  --primary-text: #ededed;
 }
 
+/* Apply these variables using Tailwind utility classes */
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  @apply bg-[var(--primary-bg)] text-[var(--primary-text)];
 }
 
+/* Utilities */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+
+  pre {
+    @apply bg-gray-100 dark:bg-gray-800 text-black dark:text-gray-200;
+  }
+}
+
+/* Transition */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+footer {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

@@ -4,6 +4,7 @@ import React from 'react';
 import NavBar from "@/app/components/Navbar/Navbar";
 import CodeEditor from '../app/components/CodeEditor/CodeEditor';
 import "./globals.css";
+import Footer from "@/app/components/Footer/Footer";
 
 const HomePage = () => {
     return (
@@ -15,9 +16,10 @@ const HomePage = () => {
 
                 <div className="mt-12">
                     <h2 className="text-2xl">Try out the editor below:</h2>
-                    <CodeEditor/>
+                    <CodeEditor />
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };

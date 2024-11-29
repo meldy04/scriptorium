@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Navbar from "@/app/components/Navbar/Navbar";
+import Footer from "@/app/components/Footer/Footer";
 
 const EditProfilePage = () => {
-    const { user } = useAuth();
+    const { user, token } = useAuth(); // Ensure token is accessible from context or state
     const router = useRouter();
 
     const [firstName, setFirstName] = useState('');
@@ -42,10 +43,12 @@ const EditProfilePage = () => {
         };
 
         try {
+            // Ensure the token is passed in the Authorization header
             const response = await fetch('/api/users/edit', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(updatedProfile),
             });
@@ -83,7 +86,7 @@ const EditProfilePage = () => {
     return (
         <div>
             <Navbar />
-            <div className="container mx-auto mt-10">
+            <div className="container mx-auto mt-10 pb-52">
                 <h1 className="text-2xl font-bold mb-4">Edit Profile</h1>
                 {error && <p className="text-red-500 mb-4">{error}</p>}
 
@@ -96,7 +99,7 @@ const EditProfilePage = () => {
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                             className="w-full p-2 border rounded"
-                            placeholder={isEditing ? '' : firstName || 'Enter your first name'}
+                            placeholder={firstName ? '' : 'Enter your first name'}
                             readOnly={!isEditing}
                         />
                     </div>
@@ -108,7 +111,7 @@ const EditProfilePage = () => {
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                             className="w-full p-2 border rounded"
-                            placeholder={isEditing ? '' : lastName || 'Enter your last name'}
+                            placeholder={lastName ? '' : 'Enter your last name'}
                             readOnly={!isEditing}
                         />
                     </div>
@@ -120,7 +123,7 @@ const EditProfilePage = () => {
                             value={avatar}
                             onChange={(e) => setAvatar(e.target.value)}
                             className="w-full p-2 border rounded"
-                            placeholder={isEditing ? '' : avatar || 'Enter your avatar URL'}
+                            placeholder={avatar ? '' : 'Enter your avatar URL'}
                             readOnly={!isEditing}
                         />
                     </div>
@@ -132,7 +135,7 @@ const EditProfilePage = () => {
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             className="w-full p-2 border rounded"
-                            placeholder={isEditing ? '' : phone || 'Enter your phone number'}
+                            placeholder={phone ? '' : 'Enter your phone number'}
                             readOnly={!isEditing}
                         />
                     </div>
@@ -166,6 +169,7 @@ const EditProfilePage = () => {
                     )}
                 </form>
             </div>
+            <Footer />
         </div>
     );
 };

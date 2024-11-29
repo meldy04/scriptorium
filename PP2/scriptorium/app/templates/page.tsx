@@ -1,120 +1,132 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import NavBar from "@/app/components/Navbar/Navbar";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import Footer from "@/app/components/Footer/Footer";
+import {useRouter} from "next/navigation";
 
 interface Template {
     id: number;
     title: string;
     explanation: string;
-    tags: string[];
     language: string;
     code: string;
-    createdAt: string;
+    tags: string;
+    user: {
+        firstName: string;
+    };
+}
+
+function TemplateCard({ template }: { template: Template }) {
+    const router = useRouter();
+
+    const handleUseTemplate = () => {
+        const editorUrl = `/editor/${template.id}`;
+        router.push(editorUrl);
+        console.log('Navigating to:', editorUrl); // Log the navigation URL
+    };
+
+    return (
+        <div className="border p-4 rounded-lg shadow-md ">
+            <h2 className="text-xl">{template.title}</h2>
+            <p className="">By {template.user.firstName}</p>
+            <p className="mt-2">{template.explanation.substring(0, 150)}...</p>
+            <p className="mt-2 text-sm">Language: {template.language}</p>
+            <p className="mt-2 text-sm">Code: {template.code}</p>
+            <p className="mt-2 text-sm">Tags: {template.tags}</p>
+            <button
+                onClick={handleUseTemplate}
+                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+                Use Template
+            </button>
+        </div>
+    );
 }
 
 const TemplatesPage = () => {
+    const [searchQuery, setSearchQuery] = useState('');
     const [templates, setTemplates] = useState<Template[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [search, setSearch] = useState<string>("");
-    const [tags, setTags] = useState<string>("");
-    const [page, setPage] = useState<number>(1);
-    const [totalPages, setTotalPages] = useState<number>(1);
+    const [currentPage, setCurrentPage] = useState(1);
 
-    const fetchTemplates = React.useCallback(async () => {
-        try {
-            const response = await axios.get("/api/templates/list", {
-                params: { search, tags, page, limit: 10 },
-            });
-            const { templates, pagination } = response.data;
-
-            setTemplates(templates);
-            setTotalPages(Math.ceil(pagination.total / pagination.limit));
-        } catch {
-            setError("Failed to fetch templates.");
-        }
-    }, [search, tags, page]);
+    const templatesPerPage = 9;
 
     useEffect(() => {
-        fetchTemplates();
-    }, [fetchTemplates]);
+        const loadTemplates = async () => {
+            try {
+                const response = await fetch(`/api/templates?searchQuery=${encodeURIComponent(searchQuery)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (Array.isArray(data)) {
+                        setTemplates(data);
+                        setCurrentPage(1);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch templates:', error);
+            }
+        };
 
-    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setPage(1);
-        fetchTemplates();
+        loadTemplates();
+    }, [searchQuery]);
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const indexOfLastBlog = currentPage * templatesPerPage;
+    const indexOfFirstBlog = indexOfLastBlog - templatesPerPage;
+    const currentTemplates = templates.slice(indexOfFirstBlog, indexOfLastBlog);
+    const totalPages = Math.ceil(templates.length / templatesPerPage);
+
+    const goToNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const goToPreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
     };
 
     return (
         <div>
             <NavBar />
-            <div className="min-h-screen flex flex-col items-center p-4">
-                <h1 className="text-3xl mb-6">Templates</h1>
-                {error && <p className="text-red-500">{error}</p>}
-                <form onSubmit={handleSearch} className="mb-4 w-full max-w-2xl flex space-x-2">
-                    <input
-                        type="text"
-                        placeholder="Search templates..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="border p-2 rounded w-full"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Tags (comma-separated)"
-                        value={tags}
-                        onChange={(e) => setTags(e.target.value)}
-                        className="border p-2 rounded w-full"
-                    />
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                        Search
-                    </button>
-                </form>
-                <div className="space-y-4 w-full max-w-4xl">
-                    {templates.map((template) => (
-                        <div
-                            key={template.id}
-                            className="border p-4 rounded-lg bg-white shadow"
-                        >
-                            <h2 className="text-xl font-semibold">{template.title}</h2>
-                            <p className="text-gray-600">{template.explanation}</p>
-                            <div className="mt-2">
-                                <span className="text-sm text-gray-500">
-                                    Tags: {template.tags.join(", ")}
-                                </span>
-                            </div>
-                            <div className="mt-2">
-                                <span className="text-sm text-gray-500">
-                                    Language: {template.language}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
+            <div className="container mx-auto p-4">
+                <h1 className="text-4xl font-bold mb-6">Templates</h1>
+                <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    placeholder="Search by title, tags, or content..."
+                    className="border p-2 mb-4 w-full"
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {// Use currentTemplates instead of templates
+                        currentTemplates.map((template) => (
+                            <TemplateCard key={template.id} template={template}/>
+                        ))}
                 </div>
-                <div className="flex justify-between mt-6 w-full max-w-4xl">
+                <div className="pagination flex justify-center mt-6">
                     <button
-                        disabled={page === 1}
-                        onClick={() => setPage(page - 1)}
-                        className={`px-4 py-2 rounded ${page === 1 ? "bg-gray-300" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+                        onClick={goToPreviousPage}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 border rounded mr-2"
                     >
                         Previous
                     </button>
-                    <span>
-                        Page {page} of {totalPages}
-                    </span>
                     <button
-                        disabled={page === totalPages}
-                        onClick={() => setPage(page + 1)}
-                        className={`px-4 py-2 rounded ${page === totalPages ? "bg-gray-300" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+                        onClick={goToNextPage}
+                        disabled={currentPage === totalPages}
+                        className="px-4 py-2 border rounded"
                     >
                         Next
                     </button>
                 </div>
             </div>
+            <Footer/>
         </div>
     );
 };

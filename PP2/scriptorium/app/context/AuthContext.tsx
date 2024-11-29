@@ -29,11 +29,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Check if token exists in localStorage
         const savedToken = localStorage.getItem('token');
         const savedUser = localStorage.getItem('user');
+        console.log('Saved Token:', savedToken);
+        console.log('Saved User:', savedUser);
+
         if (savedToken && savedUser) {
             const parsedUser = JSON.parse(savedUser);
             if (isUser(parsedUser)) {
                 setToken(savedToken);
                 setUser(parsedUser);
+                console.log('User set from localStorage:', parsedUser);
             } else {
                 console.warn("Invalid user data in localStorage");
             }
@@ -43,6 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = (token: string, user: User) => {
         setToken(token);
         setUser(user);
+        console.log('Logging in with:', token, user);
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
     };
@@ -50,6 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = () => {
         setToken(null);
         setUser(null);
+        console.log('Logged out');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
     };

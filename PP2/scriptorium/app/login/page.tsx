@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from "@/app/components/Navbar/Navbar";
 import { User } from "@prisma/client";
+import Footer from "@/app/components/Footer/Footer";
 
 const LoginPage = () => {
     const { login } = useAuth();
@@ -27,10 +28,13 @@ const LoginPage = () => {
             });
 
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Login failed:', errorText);
                 throw new Error('Invalid credentials');
             }
 
             const { token, user } = await response.json();
+            console.log('Login successful:', { token, user });
 
             const fullUser: Omit<User, 'password'> = {
                 id: user.id,
@@ -57,12 +61,12 @@ const LoginPage = () => {
     return (
         <div>
             <Navbar />
-            <div className="container mx-auto mt-10">
+            <div className="container mx-auto mt-10 pb-52">
                 <h1 className="text-2xl font-bold mb-4">Login</h1>
                 {error && <p className="text-red-500">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label htmlFor="email" className="block text-gray-700">Email</label>
+                        <label htmlFor="email" className="block">Email</label>
                         <input
                             id="email"
                             type="email"
@@ -72,7 +76,7 @@ const LoginPage = () => {
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="password" className="block text-gray-700">Password</label>
+                        <label htmlFor="password" className="block">Password</label>
                         <input
                             id="password"
                             type="password"
@@ -90,6 +94,7 @@ const LoginPage = () => {
                     </Link>
                 </p>
             </div>
+            <Footer />
         </div>
     );
 };

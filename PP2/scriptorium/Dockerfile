@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Install Docker CLI and dependencies
+RUN apk add --no-cache docker openrc bash
+
 # Copy the rest of the application's source code
 COPY . .
 
@@ -19,5 +22,5 @@ RUN npm run build
 # Expose the port the app runs on (default: 3000)
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "run", "dev"]
+# Start Docker daemon when the container runs
+ENTRYPOINT ["sh", "-c", "dockerd & npm run dev"]

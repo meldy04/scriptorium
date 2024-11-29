@@ -39,6 +39,8 @@ model Template {
   user        User       @relation(fields: [userID], references: [id])
   BlogPost    BlogPost[]
   createdAt   DateTime   @default(now())
+  isPublic    Boolean    @default(false)
+  isForked    Boolean    @default(false)
 }
 
 model BlogPost {
@@ -54,17 +56,19 @@ model BlogPost {
   votes       Int        @default(0)
   reports     Report[]
   isHidden    Boolean    @default(false)
+  reportCount Int        @default(0)
 }
 
 model Comment {
-  id         Int      @id @default(autoincrement())
-  content    String
-  userId     Int
-  blogPostId Int
-  user       User     @relation(fields: [userId], references: [id])
-  blogPost   BlogPost @relation(fields: [blogPostId], references: [id])
-  reports    Report[]
-  isHidden   Boolean  @default(false)
+  id          Int      @id @default(autoincrement())
+  content     String
+  userId      Int
+  blogPostId  Int
+  user        User     @relation(fields: [userId], references: [id])
+  blogPost    BlogPost @relation(fields: [blogPostId], references: [id])
+  reports     Report[]
+  isHidden    Boolean  @default(false)
+  reportCount Int      @default(0)
 }
 
 model Report {

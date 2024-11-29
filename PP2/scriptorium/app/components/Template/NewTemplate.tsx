@@ -1,91 +1,65 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, {useEffect, useState} from 'react';
+import axios from 'axios';
+import { useAuth } from '@/app/context/AuthContext';
 
-const NewTemplate = ({ onClose }: { onClose: () => void }) => {
-    const [title, setTitle] = useState("");
-    const [explanation, setExplanation] = useState("");
-    const [tags, setTags] = useState("");
-    const [language, setLanguage] = useState("JavaScript");
-    const [code, setCode] = useState("");
-    const [error, setError] = useState("");
+interface Template {
+    id: number;
+    title: string;
+    explanation: string;
+    tags: string;
+    code: string;
+    language: string;
+    createdAt: string;
+}
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+interface SaveTemplateFormProps {
+    onTemplateSaved?: (newTemplate: Template) => void;
+    initialCode: string;
+}
+
+const SaveTemplateForm: React.FC<SaveTemplateFormProps> = ({ onTemplateSaved, initialCode }) => {
+    const [isForked] = useState(false);
+    const [title, setTitle] = useState('');
+    const [explanation, setExplanation] = useState('');
+    const [tags, setTags] = useState('');
+    const [code, setCode] = useState(initialCode);
+    const [language] = useState('python');
+    const [error, setError] = useState<string | null>(null);
+    const { token } = useAuth();
+
+    const handleSaveTemplate = async () => {
         try {
-            await axios.post("/api/templates/create", {
-                title,
-                explanation,
-                tags: tags.split(",").map(tag => tag.trim()),
-                language,
-                code,
-            });
-            onClose();
+            const response = await axios.post(
+                '/api/templates/create',
+                { title, explanation, tags, code, language, isForked },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (response.status === 201) {
+                alert('Template saved successfully!');
+                if (onTemplateSaved) {
+                    onTemplateSaved(response.data);
+                }
+            }
         } catch {
-            setError("Failed to save template.");
+            setError('Failed to save template');
         }
     };
 
+    useEffect(() => {
+        setCode(initialCode);
+    }, [initialCode]);
+
     return (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full">
-                <h2 className="text-xl font-bold mb-4">Create New Template</h2>
-                {error && <p className="text-red-500">{error}</p>}
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <input
-                        type="text"
-                        placeholder="Title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="w-full border p-2 rounded"
-                    />
-                    <textarea
-                        placeholder="Explanation"
-                        value={explanation}
-                        onChange={(e) => setExplanation(e.target.value)}
-                        className="w-full border p-2 rounded"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Tags (comma-separated)"
-                        value={tags}
-                        onChange={(e) => setTags(e.target.value)}
-                        className="w-full border p-2 rounded"
-                    />
-                    <select
-                        value={language}
-                        onChange={(e) => setLanguage(e.target.value)}
-                        className="w-full border p-2 rounded"
-                    >
-                        <option value="JavaScript">JavaScript</option>
-                        <option value="Python">Python</option>
-                        <option value="Java">Java</option>
-                        <option value="C++">C++</option>
-                    </select>
-                    <textarea
-                        placeholder="Code"
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        className="w-full border p-2 rounded"
-                    />
-                    <div className="flex justify-between">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="bg-gray-300 px-4 py-2 rounded"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                        >
-                            Save
-                        </button>
-                    </div>
-                </form>
-            </div>
+        <div>
+            <h2>Save Code as Template</h2>
+            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
+            <input value={explanation} onChange={(e) => setExplanation(e.target.value)} placeholder="Explanation" required />
+            <input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="Tags" required />
+            <textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Code" required />
+            <button onClick={handleSaveTemplate}>Save Template</button>
+            {error && <p>{error}</p>}
         </div>
     );
 };
 
-export default NewTemplate;
+export default SaveTemplateForm;
