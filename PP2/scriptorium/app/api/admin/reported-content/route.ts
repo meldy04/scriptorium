@@ -16,6 +16,13 @@ type BlogPost = {
     reports: Report[];
 };
 
+type Comment = {
+    id: number;
+    reportCount: number;
+    user: { id: number; firstName: string; lastName: string };
+    reports: Report[];
+};
+
 type Report = {
     id: number;
     userId: number;
@@ -78,7 +85,7 @@ export async function GET(req: NextRequest) {
                 },
             });
 
-            reportedContent = comments.map(comment => ({
+            reportedContent = comments.map((comment: Comment) => ({
                 id: comment.id,
                 reportCount: comment.reportCount,
                 user: comment.user,
