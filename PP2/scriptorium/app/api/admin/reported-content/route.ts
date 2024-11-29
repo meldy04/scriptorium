@@ -7,6 +7,14 @@ type UserSummary = {
     firstName: string;
     lastName: string;
 };
+type BlogPost = {
+    id: number;
+    title: string;
+    description: string;
+    reportCount: number;
+    user: { id: number; firstName: string; lastName: string };
+    reports: Report[];
+};
 
 type Report = {
     id: number;
@@ -52,7 +60,7 @@ export async function GET(req: NextRequest) {
                 },
             });
 
-            reportedContent = blogPosts.map(bp => ({
+            reportedContent = blogPosts.map((bp: BlogPost) => ({
                 id: bp.id,
                 title: bp.title,
                 description: bp.description,
